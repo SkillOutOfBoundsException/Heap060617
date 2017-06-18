@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1497751598 source:c:\users\diegu7-cb1\documents\c++\heap060617\main.cpp
+	<iostream>
+	"Lista.h"
+
+1488924860 source:c:\users\diegu7-cb1\documents\c++\heap060617\lista.cpp
+	"Lista.h"
+
+1497751607 c:\users\diegu7-cb1\documents\c++\heap060617\lista.h
+	"Nodo.h"
+	<stdexcept>
+	<iostream>
+
+1488995098 c:\users\diegu7-cb1\documents\c++\heap060617\nodo.h
+
+1488922731 source:c:\users\diegu7-cb1\documents\c++\heap060617\nodo.cpp
+	"Nodo.h"
+
