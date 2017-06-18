@@ -3,6 +3,9 @@
 
 using namespace std;
 
+//by Diego Montes
+//special thanks to La Salsa
+
 class Node{
     public:
         int data;
@@ -16,7 +19,6 @@ class Node{
         }
 
         bool addNode(Node *newNode, int x, int y){
-            //cout << "Node " << data << " trying to add - " << newNode->data << " - couter is at " << x << endl;
             if(isOpen() && x != y){
                 sons->pushBack(newNode);
                 newNode->prev = this;
@@ -28,18 +30,32 @@ class Node{
                         return true;
                 }
             }
-            //cout << "Returning false " << endl;
             return false;
         }
 
         void addLeft(Node *newNode){
-            //cout << "Adding to the left - " << newNode->data << endl;
             if(isOpen()){
                 sons->pushBack(newNode);
+                newNode->prev = this;
             }
             else{
                 sons->index(0)->addLeft(newNode);
             }
+        }
+
+        Node* getLast(){
+            if(sons->cant == 0)
+                return this;
+            int sonI = 0;
+            int highH = 0;
+            for(int i = 0; i < sons->cant; i++){
+                int sonH = sons->index(i)->getHeight();
+                if(sonH >= highH || i == 0){
+                    highH = sonH;
+                    sonI = i;
+                }
+            }
+            return sons->index(sonI)->getLast();
         }
 
         int getHeight(){
@@ -52,12 +68,33 @@ class Node{
             return highH + 1;
         }
 
+        void fix(){
+            if(sons->cant == 0)
+                return;
+            int dataH = 0;
+            int sonI = 0;
+            for(int i = 0; i < sons->cant; i++){
+                int sonH = sons->index(i)->data;
+                if(sonH > dataH || i == 0){
+                    dataH = sonH;
+                    sonI = i;
+                }
+            }
+            Node* son = sons->index(sonI);
+            int tempD = data;
+            int tempS = son->data;
+            if(tempD >= tempS)
+                return;
+            data = tempS;
+            son->data = tempD;
+            son->fix();
+        }
+
         int countLeaves(){
             return 0;
         }
 
         void printOrden(){
-            //cout << "Node-" << data << " numer of sons ->" << sons->cant << endl;
             for(int i = 0; i < sons->cant; i++){
                 sons->index(i)->printOrden();
             }
@@ -89,11 +126,35 @@ class Tree{
                 if(!root->addNode(newNode, 0, root->getHeight() - 1))
                     root->addLeft(newNode);
             }
+            fix(newNode);
             cant++;
         }
 
-        Node* elim(int x){
-            return 0;
+        int elim(){
+            if(root == 0)
+                return 0;
+            if(cant == 1){
+                cant--;
+                int data = root->data;int highH = 0;
+            for(int i = 0; i < sons->cant; i++){
+                int sonH = sons->index(i)->getHeight();
+                if(sonH > highH || i == 0)
+                    highH = sonH;
+            }
+                root = 0;
+                return data;
+            }
+            Node *temp = root->getLast();
+            int tempR = root->data;
+            int tempT = temp->data;
+            root->data = tempT;
+            temp->data = tempR;
+            temp->prev->sons->popBack();
+            temp->prev = 0;
+            root->fix();
+            cant--;
+            return temp->data;
+
         }
 
         void printOrden(){
@@ -126,6 +187,9 @@ int main(){
     arbol->add(4);
     arbol->add(15);
 
+    cout << arbol->elim() << endl;
+
+    arbol->add(9);
     arbol->printOrden();
 
     //cout << arbol->root->data << endl;
