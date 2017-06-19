@@ -91,7 +91,18 @@ class Node{
         }
 
         int countLeaves(){
-            return 0;
+            if(sons->cant == 0){
+                cout << "Hoja -> " << data << endl;
+                return 1;
+            }
+            else{
+                int hojas = 0;
+                for(int i = 0; i < sons->cant; i++){
+                    int sonH = sons->index(i)->countLeaves();
+                    hojas = hojas + sonH;
+                }
+                return hojas;
+            }
         }
 
         void printOrden(){
@@ -132,15 +143,10 @@ class Tree{
 
         int elim(){
             if(root == 0)
-                return 0;
+                return -1;
             if(cant == 1){
                 cant--;
-                int data = root->data;int highH = 0;
-            for(int i = 0; i < sons->cant; i++){
-                int sonH = sons->index(i)->getHeight();
-                if(sonH > highH || i == 0)
-                    highH = sonH;
-            }
+                int data = root->data;
                 root = 0;
                 return data;
             }
@@ -154,12 +160,16 @@ class Tree{
             root->fix();
             cant--;
             return temp->data;
+        }
 
+        int countLeaves(){
+            return root->countLeaves();
         }
 
         void printOrden(){
             root->printOrden();
         }
+
     private:
         int maxCant;
         void fix(Node *node){
@@ -190,12 +200,10 @@ int main(){
     cout << arbol->elim() << endl;
 
     arbol->add(9);
+    arbol->countLeaves();
+
     arbol->printOrden();
 
-    //cout << arbol->root->data << endl;
-    //cout << arbol->root->sons->index(0)->data << endl;
-    //cout << arbol->root->sons->index(1)->data << endl;
-    //cout << arbol->root->sons->index(0)->sons->index(0)->data << endl;
 
 
 
